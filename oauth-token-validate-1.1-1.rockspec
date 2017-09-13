@@ -26,7 +26,7 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    ["kong.plugins.oauth-token-validate.handler"] = "oauth-token-validate/src/handler.lua",
-    ["kong.plugins.oauth-token-validate.schema"] = "oauth-token-validate/src/schema.lua",
+    ["kong.plugins.oauth-token-validate.handler"] = "src/handler.lua",
+    ["kong.plugins.oauth-token-validate.schema"] = "src/schema.lua",
   }
 }
