@@ -66,7 +66,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         else  
           -- send token validation API call
           local httpc = http:new()
-          local url = "https://glp-dev.gl-poc.com/iam/v1/oauth/" .. authorization_header .. "/validate"
+          local url = "http://54.169.6.248:8000/iam/v1/oauth/" .. authorization_header .. "/validate"
           local res, err = httpc:request_uri(url, {
             method = "POST",
             --ssl_verify = false,
