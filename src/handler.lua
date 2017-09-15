@@ -66,7 +66,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         else  
           -- send token validation API call
           local httpc = http:new()
-          local url = "https://glp-qa.gl-poc.com/iam/v1/oauth/" .. authorization_header .. "/validate"
+          local url = "https://glp-dev.gl-poc.com/iam/v1/oauth/" .. authorization_header .. "/validate"
           local res, err = httpc:request_uri(url, {
             method = "POST",
             --ssl_verify = false,
@@ -78,25 +78,61 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           
           
         if res.status ~= 200 then
-           return notAuthorized()
+           ngx.status = 401
+           ngx.header.content_type = 'application/json'
+           ngx.print('{"error":"not authorized"}')
+           ngx.exit(401)
         end
         
+        --[[
+        if not res then
+            ngx.status = res.status
+            ngx.say("failed to request: ", err)
+            ngx.exit(ngx.HTTP_OK)
+        end
+        --]]
+        
         local json = cjson.decode(res.body)
+        local statusCode = json.data.statusCode
+        local isValid = json.data.valid
+        
+        ngx.say("statusCode - " .. statusCode)
+        ngx.print("statusCode - " .. statusCode)
+        
+        ngx.say("isValid - " .. isValid)
+        ngx.print("isValid - " .. isValid)
         
         ngx.say("response - " .. res)
         ngx.print("json response - " .. json)
+        
+        
+        if not statusCode and isValid  then
+            ngx.status = 501
+            ngx.say("failed to request....")
+            ngx.exit(ngx.HTTP_OK)
+        end
+        
+        if statusCode ~= 200 and isValid ~= true then
+          ngx.status = 401
+          ngx.header.content_type = 'application/json'
+          ngx.print('{"error":"not authorized"}')
+          ngx.exit(401)
+        end
+        
+        
         
         end
    
   end
     
 end
+
   
-  
---[[function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
+function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
   plugin.super.header_filter(self)
   -- custom code for setting values in header
-  header_filter.execute(conf)
-  end --]]
+  -- header_filter.execute(conf)
+  ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
+  end 
   
 return plugin
