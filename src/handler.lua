@@ -91,6 +91,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       --]]
       
       ngx.log(ngx.ERR, "============ Response ============ " .. tostring(res))
+      ngx.log(ngx.ERR, res)
           
         --[[ 
         if res.status ~= 200 then
@@ -108,7 +109,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
             ngx.exit(ngx.HTTP_OK)
         end
         --]]
-        
+        ngx.log(ngx.ERR, res.body)
         local json = cjson.decode(res.body)
         ngx.log(ngx.ERR, "============ statusCode ============" .. json)
         local statusCode = json.data.statusCode
