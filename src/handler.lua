@@ -81,7 +81,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       --]]
       
       local httpc = http:new()
-          local url = "http://54.169.6.248:8000/m"
+          local url = "http://kong.weave.local:8000/m"
           ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
           local res, err = httpc:request_uri(url, {
             method = "GET",
