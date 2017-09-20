@@ -88,7 +88,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
             --ssl_verify = false         
           })
       
-         
+      ngx.log(ngx.ERR, "============ Response ============ " .. err)   
       ngx.log(ngx.ERR, "============ Response ============ " .. res)
           
         if res.status ~= 200 then
