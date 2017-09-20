@@ -92,12 +92,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       
       ngx.log(ngx.ERR, "============ Response ============ " .. tostring(res))
           
+        --[[ 
         if res.status ~= 200 then
            ngx.status = 401
            ngx.header.content_type = 'application/json'
            ngx.print('{"error":"not authorized"}')
            ngx.exit(401)
         end
+       --]]
         
         --[[
         if not res then
@@ -108,6 +110,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         --]]
         
         local json = cjson.decode(res.body)
+        ngx.log(ngx.ERR, "============ statusCode ============" .. json)
         local statusCode = json.data.statusCode
         local isValid = json.data.valid
         
