@@ -42,10 +42,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   plugin.super.access(self)
   
   -- access.execute(conf)
-  
+  ngx.log(ngx.ERR, "============ Oauth Plugin Executing! ============")
   ngx.say(plugin_conf.header_name)
   ngx.print(plugin_conf.header_name)
   
+  ngx.log(ngx.ERR, plugin_conf.header_name)
+  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.header_name)
+  
+  ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
   ngx.say(ngx.var.host .. '/' .. ngx.var.uri)
   ngx.print(ngx.var.host .. '/' .. ngx.var.uri)
   
@@ -53,9 +57,11 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   local request_uri = ngx.var.uri
   
   if request_uri ~= login_uri then
+    ngx.log(ngx.ERR, "============ excuting if block ============")
   
       -- local authorization_header = request.get_headers()["x-authorization"]
       local authorization_header = req_get_headers()["x-authorization"]
+      ngx.log(ngx.ERR, "============ authorization_header ============" .. authorization_header .. "request header" .. req_get_headers()["x-authorization"])
       ngx.say(authorization_header .. '/' .. req_get_headers()["x-authorization"])
       ngx.print(authorization_header .. '/' .. req_get_headers()["x-authorization"])
       
@@ -75,7 +81,8 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
               }
           
           })
-          
+         
+      ngx.log(ngx.ERR, "============ Response ============" .. res .. "response body - " .. res.body)
           
         if res.status ~= 200 then
            ngx.status = 401
@@ -96,6 +103,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         local statusCode = json.data.statusCode
         local isValid = json.data.valid
         
+      ngx.log(ngx.ERR, "============ statusCode ============" .. statusCode .. "isValid  - " .. isValid)
         ngx.say("statusCode - " .. statusCode)
         ngx.print("statusCode - " .. statusCode)
         
@@ -132,7 +140,7 @@ function plugin:header_filter(plugin_conf) -- Executed when all response headers
   plugin.super.header_filter(self)
   -- custom code for setting values in header
   -- header_filter.execute(conf)
-  ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
+  -- ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
   end 
   
 return plugin
