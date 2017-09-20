@@ -90,7 +90,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           })
       --]]
       
-      ngx.log(ngx.ERR, "============ Response ============ " .. res)
+      ngx.log(ngx.ERR, "============ Response ============ " .. tostring(res))
           
         if res.status ~= 200 then
            ngx.status = 401
