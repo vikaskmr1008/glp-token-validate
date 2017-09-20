@@ -69,9 +69,10 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           -- send token validation API call
           local httpc = http:new()
           local url = "http://54.169.6.248:8000/iam/v1/oauth/" .. authorization_header .. "/validate"
+          ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
           local res, err = httpc:request_uri(url, {
             method = "POST",
-            ssl_verify = false,
+            --ssl_verify = false,
             headers = {
                 ["Content-Type"] = "application/json",
               }
