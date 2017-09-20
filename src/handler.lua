@@ -43,15 +43,11 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   
   -- access.execute(conf)
   ngx.log(ngx.ERR, "============ Oauth Plugin Executing! ============")
-  ngx.say(plugin_conf.header_name)
-  ngx.print(plugin_conf.header_name)
-  
-  ngx.log(ngx.ERR, plugin_conf.header_name)
+   
   ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.header_name)
   
   ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
-  ngx.say(ngx.var.host .. '/' .. ngx.var.uri)
-  ngx.print(ngx.var.host .. '/' .. ngx.var.uri)
+ 
   
   local login_uri = "/iam/v1/oauth/authenticate"
   local request_uri = ngx.var.uri
@@ -61,12 +57,12 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   
       -- local authorization_header = request.get_headers()["x-authorization"]
       local authorization_header = req_get_headers()["x-authorization"]
-      ngx.log(ngx.ERR, "============ authorization_header ============" .. authorization_header .. "request header" .. req_get_headers()["x-authorization"])
-      ngx.say(authorization_header .. '/' .. req_get_headers()["x-authorization"])
-      ngx.print(authorization_header .. '/' .. req_get_headers()["x-authorization"])
+    
+      ngx.log(ngx.ERR, "============ authorization_header ============" .. authorization_header)
       
         if not authorization_header then 
           -- throw error here
+        ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============" .. authorization_header)
           return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
     
         else  
@@ -75,14 +71,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           local url = "http://54.169.6.248:8000/iam/v1/oauth/" .. authorization_header .. "/validate"
           local res, err = httpc:request_uri(url, {
             method = "POST",
-            --ssl_verify = false,
+            ssl_verify = false,
             headers = {
                 ["Content-Type"] = "application/json",
               }
           
           })
          
-      ngx.log(ngx.ERR, "============ Response ============" .. res .. "response body - " .. res.body)
+      ngx.log(ngx.ERR, "============ Response ============ " .. res)
           
         if res.status ~= 200 then
            ngx.status = 401
@@ -136,11 +132,12 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
 end
 
   
-function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
+--[[function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
   plugin.super.header_filter(self)
   -- custom code for setting values in header
   -- header_filter.execute(conf)
   -- ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
   end 
+--]]
   
 return plugin
