@@ -67,8 +67,8 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
     
         else  
           -- send token validation API call
-         --[[ local httpc = http:new()
-          local url = "http://54.169.6.248:8000/iam/v1/oauth/" .. authorization_header .. "/validate"
+          local httpc = http:new()
+          local url = "http://kong.weave.local:8000/iam/v1/oauth/" .. authorization_header .. "/validate"
           ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
           local res, err = httpc:request_uri(url, {
             method = "POST",
@@ -78,8 +78,9 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
               }
           
           })
-      --]]
       
+      
+      --[[
       local httpc = http:new()
           local url = "http://kong.weave.local:8000/m"
           ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
@@ -87,6 +88,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
             method = "GET",
             --ssl_verify = false         
           })
+      --]]
       
       ngx.log(ngx.ERR, "============ Response ============ " .. res)
           
