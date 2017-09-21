@@ -85,10 +85,12 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         end
         
         if statusCode ~= 200 and isValid ~= true then
-          ngx.status = 401
+          ngx.status = 419
           ngx.header.content_type = 'application/json'
-          ngx.print('{"error":"not authorized"}')
-          ngx.exit(401)
+          ngx.print('{"errorDescription": "You have been signed out due to lack of activity. To continue using your account, please sign in again."}')
+          ngx.print('{"statusCode": 419,}')
+          ngx.print('{"valid": false}')
+          ngx.exit(419)
         end
         
         end
