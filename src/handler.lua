@@ -64,13 +64,15 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         else  
           -- send token validation API call
           local httpc = http:new()
-          local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
+        --  local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
+          local url = "http://iam_con.weave.local:9049/iam/health"
           ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
           local res, err = httpc:request_uri(url, {
-            method = "POST",
+            method = "GET",
             --ssl_verify = false,
             headers = {
-                ["Content-Type"] = "application/json"
+                ["Content-Type"] = "application/json",
+                ["CorrelationId"] = "123"
               }
           
           })
