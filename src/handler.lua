@@ -91,7 +91,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         local json = cjson.decode(res.body)
         
         --ngx.log(ngx.ERR, cjson.decode(res.body))
-        ngx.log(ngx.ERR, json)
+        ngx.log(ngx.ERR, tostring(json))
       
         local statusCode = json.data.statusCode
         local isValid = json.data.valid
