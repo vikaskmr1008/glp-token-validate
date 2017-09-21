@@ -47,9 +47,8 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   if request_uri ~= login_uri then
       -- local authorization_header = request.get_headers()["x-authorization"]
       local authorization_header = req_get_headers()["x-authorization"]
-      ngx.log(ngx.ERR, "============ authorization_header ============" .. authorization_header)
-        
-        if not authorization_header then 
+
+       if not authorization_header then 
           -- throw error here
           ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============" .. authorization_header)
           return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
