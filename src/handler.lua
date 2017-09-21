@@ -84,8 +84,9 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       --ngx.log(ngx.ERR, decode)
       
       --ngx.log(ngx.ERR, response)
-      ngx.log(ngx.ERR, res)
-      ngx.log(ngx.ERR, res.body)
+      
+      --ngx.log(ngx.ERR, res)
+      --ngx.log(ngx.ERR, res.body)
         
         local json = cjson.decode(res.body)
         
