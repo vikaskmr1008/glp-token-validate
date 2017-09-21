@@ -1,6 +1,7 @@
 -- load the base plugin object
 local BasePlugin = require "kong.plugins.base_plugin"
 local responses = require "kong.tools.responses"
+local requests = require('requests')
 local constants = require "kong.constants"
 
 -- local header_filter = require "kong.plugins.token-validation.header_filter"
@@ -8,7 +9,7 @@ local constants = require "kong.constants"
 
 local http = require "resty.http"
 
-local cjson = require "cjson.safe"
+local cjson = require "cjson"
 local pl_stringx = require "pl.stringx"
 
 local string_format = string.format
@@ -78,38 +79,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
               }
           
           })
+      headers = {Content-Type = 'application/json'}
+      response = requests.get{url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate", headers = headers}
       
-      
-      --[[
-      local httpc = http:new()
-          local url = "http://kong.weave.local:8000/m"
-          ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
-          local res, err = httpc:request_uri(url, {
-            method = "GET",
-            --ssl_verify = false         
-          })
-      --]]
-      
-      ngx.log(ngx.ERR, "============ Response ============ " .. tostring(res))
+      ngx.log(ngx.ERR, response)
       ngx.log(ngx.ERR, res)
-          
-        --[[ 
-        if res.status ~= 200 then
-           ngx.status = 401
-           ngx.header.content_type = 'application/json'
-           ngx.print('{"error":"not authorized"}')
-           ngx.exit(401)
-        end
-       --]]
+      ngx.log(ngx.ERR, res.body)
+         
         
-        --[[
-        if not res then
-            ngx.status = res.status
-            ngx.say("failed to request: ", err)
-            ngx.exit(ngx.HTTP_OK)
-        end
-        --]]
-        ngx.log(ngx.ERR, res.body)
         local json = cjson.decode(res.body)
         ngx.log(ngx.ERR, "============ statusCode ============" .. json)
         local statusCode = json.data.statusCode
