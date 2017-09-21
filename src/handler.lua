@@ -50,7 +50,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
 
        if not authorization_header then 
           -- throw error here
-          ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============" .. authorization_header)
+          ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============")
           return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
 
         else  
