@@ -1,7 +1,9 @@
 -- load the base plugin object
 local BasePlugin = require "kong.plugins.base_plugin"
 local responses = require "kong.tools.responses"
-local requests = require('requests')
+--local requests = require('requests')
+local json = require "json"
+
 local constants = require "kong.constants"
 
 -- local header_filter = require "kong.plugins.token-validation.header_filter"
@@ -72,8 +74,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
               }
           
           })
-      headers = {["Content-Type"] = "application/json"}
-      response = requests.get{url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate", headers = headers}
+      --headers = {["Content-Type"] = "application/json"}
+      --response = requests.get{url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate", headers = headers}
+      
+      
+      local encode = json:encode(res)
+      ngx.log(ngx.ERR, encode)
+      local decode = json:decode(res)
+      ngx.log(ngx.ERR, decode)
       
       ngx.log(ngx.ERR, response)
       ngx.log(ngx.ERR, res)
