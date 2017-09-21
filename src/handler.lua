@@ -68,11 +68,11 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
             method = "POST",
             --ssl_verify = false,
             headers = {
-                ["Content-Type"] = "application/json",
+                ["Content-Type"] = "application/json"
               }
           
           })
-      headers = {Content-Type = 'application/json'}
+      headers = {["Content-Type"] = "application/json"}
       response = requests.get{url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate", headers = headers}
       
       ngx.log(ngx.ERR, response)
