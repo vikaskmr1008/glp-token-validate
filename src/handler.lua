@@ -1,31 +1,12 @@
 -- load the base plugin object
 local BasePlugin = require "kong.plugins.base_plugin"
-local responses = require "kong.tools.responses"
-local constants = require "kong.constants"
-
+local http = require "resty.http"
+local cjson = require "cjson"
 -- local header_filter = require "kong.plugins.token-validation.header_filter"
 -- local access = require "kong.plugins.token-validation.access"
 
-local http = require "resty.http"
-
-local cjson = require "cjson"
-local pl_stringx = require "pl.stringx"
-
-local string_format = string.format
-local ngx_re_gmatch = ngx.re.gmatch
-
-local req_set_header = ngx.req.set_header
-local req_get_headers = ngx.req.get_headers
-local clear_header = ngx.req.clear_header
-local ngx_req_read_body = ngx.req.read_body
-local get_method = ngx.req.get_method
-
-local set_uri_args = ngx.req.set_uri_args
-local get_uri_args = ngx.req.get_uri_args
-
 -- creating a subclass 
 local plugin = BasePlugin:extend()
-
 plugin.PRIORITY = 2
 
 -- constructor
@@ -37,10 +18,11 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   plugin.super.access(self)
 
   -- access.execute(conf)
-  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.header_name)
+  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.login_uri)
+  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.token_validate_url)
   ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
   
-  local login_uri = "/iam/v1/oauth/authenticate"
+  local login_uri = plugin_conf.login_uri
   local request_uri = ngx.var.uri
   
   if request_uri ~= login_uri then
@@ -53,8 +35,10 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
         else  
           -- send token validation API call
           local httpc = http:new()
-          local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
+          --local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
+          local url = plugin_conf.token_validate_url .. authorization_header .. "/validate"
           ngx.log(ngx.ERR, url)
+      
           local res, err = httpc:request_uri(url, {
             method = "POST",
             --ssl_verify = false,
