@@ -26,7 +26,6 @@ local get_uri_args = ngx.req.get_uri_args
 
 local ngx_log = ngx.log
 
-
 -- creating a subclass 
 local plugin = BasePlugin:extend()
 
@@ -35,27 +34,21 @@ plugin.PRIORITY = 2
 -- constructor
 function plugin:new()
   plugin.super.new(self, "oauth-token-validate")
-  
   end
-  
   
 function plugin:access(plugin_conf) -- Executed for every request upon it's reception from a client and before it is being proxied to the upstream service.
   plugin.super.access(self)
   
   -- access.execute(conf)
   ngx.log(ngx.ERR, "============ Oauth Plugin Executing! ============")
-   
   ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.header_name)
-  
   ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
- 
   
   local login_uri = "/iam/v1/oauth/authenticate"
   local request_uri = ngx.var.uri
   
   if request_uri ~= login_uri then
     ngx.log(ngx.ERR, "============ excuting if block ============")
-  
       -- local authorization_header = request.get_headers()["x-authorization"]
       local authorization_header = req_get_headers()["x-authorization"]
     
@@ -65,7 +58,7 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           -- throw error here
         ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============" .. authorization_header)
           return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
-    
+
         else  
           -- send token validation API call
           local httpc = http:new()
@@ -85,23 +78,14 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       ngx.log(ngx.ERR, response)
       ngx.log(ngx.ERR, res)
       ngx.log(ngx.ERR, res.body)
-         
         
         local json = cjson.decode(res.body)
         ngx.log(ngx.ERR, "============ statusCode ============" .. json)
         local statusCode = json.data.statusCode
         local isValid = json.data.valid
         
-      ngx.log(ngx.ERR, "============ statusCode ============" .. statusCode .. "isValid  - " .. isValid)
-        ngx.say("statusCode - " .. statusCode)
-        ngx.print("statusCode - " .. statusCode)
-        
-        ngx.say("isValid - " .. isValid)
-        ngx.print("isValid - " .. isValid)
-        
-        ngx.say("response - " .. res)
-        ngx.print("json response - " .. json)
-        
+      ngx.log(ngx.ERR, statusCode)
+      ngx.log(ngx.ERR, isValid)
         
         if not statusCode and isValid  then
             ngx.status = 501
@@ -116,14 +100,11 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
           ngx.exit(401)
         end
         
-        
-        
         end
    
   end
     
 end
-
   
 --[[function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
   plugin.super.header_filter(self)
@@ -132,5 +113,4 @@ end
   -- ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
   end 
 --]]
-  
 return plugin
