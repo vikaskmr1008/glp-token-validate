@@ -80,7 +80,10 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
       ngx.log(ngx.ERR, res.body)
         
         local json = cjson.decode(res.body)
-        ngx.log(ngx.ERR, "============ statusCode ============" .. json)
+        
+        ngx.log(ngx.ERR, cjson.decode(res.body))
+        ngx.log(ngx.ERR, json)
+      
         local statusCode = json.data.statusCode
         local isValid = json.data.valid
         
@@ -105,12 +108,5 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
   end
     
 end
-  
---[[function plugin:header_filter(plugin_conf) -- Executed when all response headers bytes have been received from the upstream service.
-  plugin.super.header_filter(self)
-  -- custom code for setting values in header
-  -- header_filter.execute(conf)
-  -- ngx.header["custom-header"] = "/json: " .. authorization_header .. "/json: " .. json .. "/request_uri: " .. request_uri;
-  end 
---]]
+
 return plugin
