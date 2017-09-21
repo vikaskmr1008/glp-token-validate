@@ -35,9 +35,8 @@ function plugin:new()
   
 function plugin:access(plugin_conf) -- Executed for every request upon it's reception from a client and before it is being proxied to the upstream service.
   plugin.super.access(self)
-  
+
   -- access.execute(conf)
-  ngx.log(ngx.ERR, "============ Oauth Plugin Executing! ============")
   ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.header_name)
   ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
   
@@ -50,15 +49,12 @@ function plugin:access(plugin_conf) -- Executed for every request upon it's rece
 
        if not authorization_header then 
           -- throw error here
-          ngx.log(ngx.ERR, "============exiting if block bz authorization_header is null ============")
           return responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
-
         else  
           -- send token validation API call
           local httpc = http:new()
           local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
-        --  local url = "http://iam_con.weave.local:9049/iam/health"
-          ngx.log(ngx.ERR, "============Oauth token validating url ============" .. url)
+          ngx.log(ngx.ERR, url)
           local res, err = httpc:request_uri(url, {
             method = "POST",
             --ssl_verify = false,
