@@ -53,7 +53,7 @@ function _M.run(plugin_conf)
  function invalidRequest()
      ngx.status = 400
      ngx.header.content_type = 'application/json'
-     ngx.print('{"status": 400, "errors": [{"status": 400, "code": "BAD_REQUEST", "message": "Invalid Request"}]}')
+     ngx.print('{"status": 401, "errors": [{"status": 401, "code": "BAD_REQUEST", "message": "Access Denied"}]}')
      ngx.exit(400)
  
  end
