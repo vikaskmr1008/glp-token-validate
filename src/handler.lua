@@ -15,7 +15,7 @@ function plugin:new()
   
 function plugin:access(plugin_conf) -- Executed for every request upon it's reception from a client and before it is being proxied to the upstream service.
   plugin.super.access(self)
-  access.execute(plugin_conf) -- `execute()` and passing it the plugin's configuration.
+  access.run(plugin_conf) -- `execute()` and passing it the plugin's configuration.
 end
 
 return plugin

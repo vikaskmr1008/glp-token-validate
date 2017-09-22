@@ -4,7 +4,7 @@ local http = require "resty.http"
 local cjson = require "cjson"
 local req_get_headers = ngx.req.get_headers
 
-function _M.execute(plugin_conf)
+function _M.run(plugin_conf)
 
   local request_uri = ngx.var.uri
   
