@@ -6,14 +6,9 @@ local req_get_headers = ngx.req.get_headers
 
 function _M.execute(plugin_conf)
 
-  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.login_uri)
-  ngx.log(ngx.ERR, "============ plugin_conf.header_name! ============" .. plugin_conf.token_validate_url)
-  ngx.log(ngx.ERR, "============ ngx.var.uri! ============" .. ngx.var.uri)
-  
-  local login_uri = plugin_conf.login_uri
   local request_uri = ngx.var.uri
   
-  if request_uri ~= login_uri then
+  if request_uri ~= plugin_conf.login_uri then
       local authorization_header = req_get_headers()["x-authorization"]
 
        if not authorization_header then 
@@ -21,7 +16,6 @@ function _M.execute(plugin_conf)
         else  
           -- execute token validation API call
           local httpc = http:new()
-          --local url = "http://iam_con.weave.local:9049/iam/v1/oauth/" .. authorization_header .. "/validate"
           local url = plugin_conf.token_validate_url .. authorization_header .. "/validate"
           ngx.log(ngx.ERR, url)
       
@@ -30,9 +24,8 @@ function _M.execute(plugin_conf)
             --ssl_verify = false,
             headers = {
                 ["Content-Type"] = "application/json",
-                ["CorrelationId"] = "123"
+                --["CorrelationId"] = "12345"
               }
-          
           })
         
         local json = cjson.decode(res.body)
@@ -64,6 +57,5 @@ function _M.execute(plugin_conf)
      ngx.exit(400)
  
  end
- 
  
  return _M
