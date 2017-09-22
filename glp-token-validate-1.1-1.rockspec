@@ -26,7 +26,8 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
+    ["kong.plugins.glp-token-validate.access"] = "src/access.lua",
     ["kong.plugins.glp-token-validate.handler"] = "src/handler.lua",
-    ["kong.plugins.glp-token-validate.schema"] = "src/schema.lua",
+    ["kong.plugins.glp-token-validate.schema"] = "src/schema.lua"
   }
 }
