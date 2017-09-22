@@ -1,1 +1,1 @@
-# oauth-token-validate
+# glp-token-validate
