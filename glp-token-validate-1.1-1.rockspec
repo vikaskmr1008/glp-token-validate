@@ -8,7 +8,7 @@ version = "1.1-1"     -- renumber, must match the info in the filename of this r
 -- supported_platforms = {"linux", "macosx"}
 
 source = {
-  url = "git://github.com/vikaskmr1008/glp-token-validate"
+  -- url = plugin source code url
   -- tag = "1.1-1"
 }
 
