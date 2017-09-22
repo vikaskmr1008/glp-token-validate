@@ -24,7 +24,7 @@ function _M.execute(plugin_conf)
             --ssl_verify = false,
             headers = {
                 ["Content-Type"] = "application/json",
-                --["CorrelationId"] = "12345"
+                ["CorrelationId"] = "12345"
               }
           })
         
